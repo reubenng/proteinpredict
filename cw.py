@@ -9,7 +9,7 @@ windowLen = 13
 proTypes = 21 # number of protein type
 strucTypes = 3 # number of structure type
 inputLength = windowLen * proTypes
-hiddenNeuron = 200
+hiddenNeuron = 2000
 trainfilename = 'protein-secondary-structure.train'
 testfilename = 'protein-secondary-structure.test'
 structype = ['_', 'e', 'h']
@@ -87,14 +87,14 @@ onehotR = tf.reshape(onehotIn, [-1,inputLength])
 w1 = tf.get_variable("w1", shape=[inputLength,hiddenNeuron], initializer=tf.contrib.layers.xavier_initializer())
 # matrix multiplication to get hidden layer 1
 h1 = tf.matmul(onehotR, w1)
-h1R = tf.nn.sigmoid(h1)
+h1R = tf.nn.relu(h1)
 
 # output layer
 w2 = tf.get_variable("w2", shape=[hiddenNeuron,strucTypes], initializer=tf.contrib.layers.xavier_initializer())
 # matrix multiplication to get hidden layer 2
-# h2 = tf.matmul(h1R, w2)
-Yhat = tf.matmul(h1R, w2)
-# Yhat = tf.nn.sigmoid(h2)
+h2 = tf.matmul(h1R, w2)
+# Yhat = tf.matmul(h1R, w2)
+Yhat = tf.nn.relu(h2)
 # predict by choosing highest type
 predict = tf.argmax(Yhat,1)
 
